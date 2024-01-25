@@ -2,25 +2,20 @@ import { Facebook } from '@/components/icons/facebook'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import { Dancing_Script as DancingScript } from 'next/font/google'
+import { Satisfy } from 'next/font/google'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import phoneImage from '@/assets/screenshot3.png'
 import phoneImageSecondary from '@/assets/mobile2.png'
-import { signIn } from 'next-auth/react'
+import { handleConnectWithFacebook } from '@/utils/handleConnectWithFacebook'
 
-const dancingScript = DancingScript({
-  style: ['normal'],
+export const satisfy = Satisfy({
   subsets: ['latin'],
-  weight: ['700', '400'],
+  weight: ['400'],
 })
 
 export default function Login() {
-  async function handleConnectWithFacebook() {
-    await signIn('facebook')
-  }
-
   return (
     <div className="w-screen h-screen flex md:justify-center md:items-center md:gap-16">
       <div className="flex max-md:hidden">
@@ -37,7 +32,7 @@ export default function Login() {
       </div>
       <div className="max-md:w-full max-md:h-full flex flex-col max-md:items-center max-md:justify-center gap-8 p-4 text-center md:gap-16 md:border md:p-10 md:py-14">
         <h1
-          className={`text-5xl ${dancingScript.className} ${dancingScript.style} font-bold mb-20`}
+          className={`text-5xl ${satisfy.className} ${satisfy.style} font-bold mb-20`}
         >
           Instagram
         </h1>
