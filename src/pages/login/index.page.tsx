@@ -1,13 +1,17 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Satisfy } from 'next/font/google'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+
+import phoneImageSecondary from '@/assets/mobile2.png'
+import phoneImage from '@/assets/screenshot3.png'
 import { Facebook } from '@/components/icons/facebook'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import { Satisfy } from 'next/font/google'
-import Image from 'next/image'
-import Link from 'next/link'
-
-import phoneImage from '@/assets/screenshot3.png'
-import phoneImageSecondary from '@/assets/mobile2.png'
+import { api } from '@/lib/axios'
 import { handleConnectWithFacebook } from '@/utils/handleConnectWithFacebook'
 
 export const satisfy = Satisfy({
@@ -15,7 +19,29 @@ export const satisfy = Satisfy({
   weight: ['400'],
 })
 
+const formLoginSchema = z.object({
+  username: z.string(),
+  password: z.string().min(6),
+})
+
+type FormLoginSchema = z.infer<typeof formLoginSchema>
+
 export default function Login() {
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<FormLoginSchema>({
+    resolver: zodResolver(formLoginSchema),
+  })
+
+  async function handleLoginUser(data: FormLoginSchema) {
+    const { status } = await api.post('/user/authenticate', data)
+    if (status === 200) {
+      window.location.href = '/home'
+    }
+  }
+
   return (
     <div className="w-screen h-screen flex md:justify-center md:items-center md:gap-16">
       <div className="flex max-md:hidden">
@@ -37,11 +63,22 @@ export default function Login() {
           Instagram
         </h1>
 
-        <form action="" className="space-y-4 w-full px-8">
-          <Input placeholder="Telefone, nome de usuário ou email" />
-          <Input placeholder="Senha" />
+        <form
+          onSubmit={handleSubmit(handleLoginUser)}
+          className="space-y-4 w-full px-8"
+        >
+          <Input type="text" placeholder="Nome" {...register('username')} />
+          <Input
+            type="password"
+            placeholder="Senha"
+            {...register('password')}
+          />
 
-          <Button type="submit" className="w-full bg-blue-500">
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-blue-500 hover:bg-blue-500"
+          >
             Entrar
           </Button>
 
@@ -55,7 +92,7 @@ export default function Login() {
         <nav className="flex flex-col items-center justify-between">
           <Button
             onClick={handleConnectWithFacebook}
-            className="flex gap-1 mb-3 border-none bg-transparent text-blue-700 font-bold focus:bg-transparent focus:border-none"
+            className="flex gap-1 mb-3 border-none bg-transparent text-blue-700 font-bold hover:bg-transparent"
           >
             <Facebook />
             Entrar com o Facebook

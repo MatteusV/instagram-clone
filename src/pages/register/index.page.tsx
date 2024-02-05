@@ -1,18 +1,52 @@
-import { Button } from '@/components/ui/button'
-import { satisfy } from '../login'
-import { Facebook } from '@/components/icons/facebook'
-import { handleConnectWithFacebook } from '@/utils/handleConnectWithFacebook'
-import { Input } from '@/components/ui/input'
-import Link from 'next/link'
+import { zodResolver } from '@hookform/resolvers/zod'
 import Image from 'next/image'
+import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+
 import apple from '@/assets/buttonApple.png'
 import google from '@/assets/buttonGoogle.png'
+import { Facebook } from '@/components/icons/facebook'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
+import { api } from '@/lib/axios'
+import { handleConnectWithFacebook } from '@/utils/handleConnectWithFacebook'
+
+import { satisfy } from '../login/index.page'
+
+const registerFormSchema = z.object({
+  email: z
+    .string()
+    .email()
+    .transform((val) => val.toLowerCase()),
+  password: z.string().min(6),
+  fullName: z.string(),
+  username: z.string(),
+})
+
+type RegisterFormSchema = z.infer<typeof registerFormSchema>
 
 export default function Register() {
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<RegisterFormSchema>({
+    resolver: zodResolver(registerFormSchema),
+  })
+
+  async function handleRegisterUser(data: RegisterFormSchema) {
+    const { status } = await api.post('/user/register', data)
+
+    if (status === 201) {
+      window.location.href = '/'
+    }
+  }
+
   return (
-    <div className="w-screen h-screen flex flex-col justify-center items-center gap-4">
-      <div className="md:w-80 max-md:h-screen lg:w-96 2xl:h-max border border-black/30 shadow-xl max-md:p-8 p-16 pb-4">
+    <div className="w-screen md:p-4 flex flex-col justify-center items-center gap-4">
+      <div className="md:w-80 lg:w-96 2xl:h-max border border-black/30 shadow-xl max-md:p-8 p-16 pb-4">
         <h1 className={`${satisfy.className} font-normal text-6xl text-center`}>
           Instagram
         </h1>
@@ -34,26 +68,35 @@ export default function Register() {
           <Separator className="bg-stone-500/50 flex-1" />
         </div>
 
-        <form className="space-y-2 mt-8">
+        <form
+          id="registerForm"
+          name="registerForm"
+          className="space-y-2 mt-8"
+          onSubmit={handleSubmit(handleRegisterUser)}
+        >
           <Input
             type="email"
             className="rounded-none shadow-md placeholder:text-xs"
-            placeholder="Número de telofone ou email"
+            placeholder="Email"
+            {...register('email')}
           />
           <Input
             type="text"
             className="rounded-none shadow-md placeholder:text-xs"
             placeholder="Nome completo"
+            {...register('fullName')}
           />
           <Input
             type="text"
             className="rounded-none shadow-md placeholder:text-xs"
             placeholder="Nome de usuário"
+            {...register('username')}
           />
           <Input
             type="password"
             className="rounded-none shadow-md placeholder:text-xs"
             placeholder="Senha"
+            {...register('password')}
           />
         </form>
 
@@ -80,14 +123,16 @@ export default function Register() {
         </p>
 
         <Button
-          onClick={handleConnectWithFacebook}
+          type="submit"
+          disabled={isSubmitting}
+          form="registerForm"
           className="flex justify-center items-center gap-2 w-full  bg-sky-500  font-bold px-8 m-auto mt-4 hover:bg-sky-400 hover:cursor-pointer"
         >
           Cadastra-se
         </Button>
       </div>
 
-      <div className="border border-black/30 shadow-2xl md:w-80  lg:w-96 flex justify-center items-center p-20 py-8">
+      <div className="border border-black/30 shadow-2xl md:w-80 max-md:w-full  lg:w-96 flex justify-center items-center p-20 py-8">
         <p>
           Tem um conta?{' '}
           <Link href="/login" className="text-sky-500 font-bold">

@@ -4,6 +4,10 @@ const envSchema = z.object({
   FACEBOOK_CLIENT_ID: z.string(),
   FACEBOOK_CLIENT_SECRET: z.string(),
   NEXT_AUTH_SECRET: z.string(),
+  NEXTAUTH_URL: z.string(),
+  JWT_SECRET: z.string(),
+  PULSE_API_KEY: z.string(),
+  NEXT_URL: z.string(),
 })
 
 const _env = envSchema.safeParse(process.env)
