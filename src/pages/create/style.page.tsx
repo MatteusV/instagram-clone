@@ -4,6 +4,8 @@ import { X } from '@phosphor-icons/react'
 import { type PutBlobResult } from '@vercel/blob'
 import { upload } from '@vercel/blob/client'
 import Image from 'next/image'
+import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -31,6 +33,9 @@ export default function Style() {
   const [image, setImage] = useState('')
   const [blob, setBlob] = useState<PutBlobResult | null>(null)
 
+  const { data } = useSession()
+  const user = data?.user
+
   const inputFileRef = useRef<HTMLInputElement>(null)
   const handleImageChange = (e: any) => {
     setImage(URL.createObjectURL(e.target.files[0]))
@@ -45,7 +50,9 @@ export default function Style() {
 
     const newBlob = await upload(file.name, file, {
       access: 'public',
-      handleUploadUrl: '/api/avatar/upload',
+      handleUploadUrl: '/api/post/create',
+      clientPayload: user?.email,
+      multipart: true,
     })
 
     setBlob(newBlob)
@@ -54,9 +61,9 @@ export default function Style() {
   return (
     <div className="bg-black text-white w-screen h-screen">
       <header className="flex justify-between items-center p-2 font-bold">
-        <button>
+        <Link href={'/'}>
           <X fill="#ffff" size={32} />
-        </button>
+        </Link>
         <h1>Nova publicação de foto</h1>
         <Button
           type="submit"
