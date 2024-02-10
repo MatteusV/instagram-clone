@@ -22,13 +22,13 @@ export default async function Handler(
   })
 
   if (!user) {
-    res.status(401).send({ message: 'Email or password incorrect' })
+    return res.status(401).send({ message: 'Email or password incorrect' })
   } else {
     const token = generateToken(user.id)
     setCookie({ res }, '@instagram:token', token, {
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: '/',
     })
-    res.status(200).send({ message: 'Authentication successful' })
+    return res.status(200).send({ message: 'Authentication successful' })
   }
 }

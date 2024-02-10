@@ -45,6 +45,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Post          Post[]
+  Comment       Comment[]
 }
 
 model VerificationToken {
@@ -56,9 +58,33 @@ model VerificationToken {
 }
 
 model Location {
-  id    String @id @default(uuid())
-  city  String
-  state String
+  id     String @id @default(uuid())
+  city   String
+  state  String
+  postId String
+
+  post Post @relation(fields: [postId], references: [id])
 
   @@map("locations")
+}
+
+model Post {
+  id       String  @id @default(uuid())
+  content  String
+  subtitle String?
+  userId   String
+
+  user     User       @relation(fields: [userId], references: [id])
+  Location Location[]
+
+  @@map("posts")
+}
+
+model Comment {
+  id      String @id @default(uuid())
+  content String
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+
+  @@map("comments")
 }

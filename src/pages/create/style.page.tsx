@@ -1,23 +1,21 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { X } from '@phosphor-icons/react'
-import { type PutBlobResult } from '@vercel/blob'
-import { upload } from '@vercel/blob/client'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { api } from '@/lib/axios'
 
 const formPostSchema = z.object({
   subtitle: z.string().max(200),
   location: z.string().transform((value) => value.toLowerCase()),
-  file: z.any(),
 })
 
 type FormPostSchema = z.infer<typeof formPostSchema>
@@ -31,31 +29,19 @@ export default function Style() {
     resolver: zodResolver(formPostSchema),
   })
   const [image, setImage] = useState('')
-  const [blob, setBlob] = useState<PutBlobResult | null>(null)
 
-  const { data } = useSession()
-  const user = data?.user
-
-  const inputFileRef = useRef<HTMLInputElement>(null)
   const handleImageChange = (e: any) => {
     setImage(URL.createObjectURL(e.target.files[0]))
   }
 
-  async function handleSubmitPost(data: FormPostSchema) {
-    if (!inputFileRef.current?.files) {
-      throw new Error('No file selected')
+  async function handleSubmitPost(formData: FormPostSchema) {
+    const data = { formData, image }
+    const res = await api.post('/post/create', data)
+
+    if (res.status === 201) {
+      alert('Post cadastrado')
+      window.location.href = '/'
     }
-
-    const file = inputFileRef.current.files[0]
-
-    const newBlob = await upload(file.name, file, {
-      access: 'public',
-      handleUploadUrl: '/api/post/create',
-      clientPayload: user?.email,
-      multipart: true,
-    })
-
-    setBlob(newBlob)
   }
 
   return (
@@ -112,10 +98,8 @@ export default function Style() {
 
           <Input
             type="file"
-            {...register('file')}
             id="image"
             accept=".jpg,.jpeg,.png,.mp4"
-            ref={inputFileRef}
             onChange={handleImageChange}
             required
           />

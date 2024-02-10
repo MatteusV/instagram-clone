@@ -15,14 +15,98 @@ import {
 } from '@radix-ui/react-dropdown-menu'
 import Link from 'next/link'
 
+import profileImage from '@/assets/imageProfile.jpg'
+import messiPost from '@/assets/messiPost.jpg'
 import { Header } from '@/components/header'
 import { Post } from '@/components/post'
 
 import { satisfy } from '../login/index.page'
 
 export default function Home() {
+  const dataPost = [
+    {
+      imageProfile: profileImage,
+      id: 'asjfoajhfaijfqwijf qfjq-w9f q',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
+      username: 'Matteus_varlesse',
+      content: messiPost,
+      subtitle:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
+      comments: [
+        {
+          id: '1',
+          username: 'Matteus Varlesse',
+          content: 'spfijasofpiajhfoi qnifasjhfpiqwj0fjqwpfjqp fjqwpif',
+        },
+        {
+          id: '1',
+          username: 'Matteus Varlesse',
+          content: 'spfijasofpiajhfoi qnifasjhfpiqwj0fjqwpfjqp fjqwpif',
+        },
+      ],
+    },
+    {
+      imageProfile: profileImage,
+      id: 'gfsouahogahojfahsf qfjq-w9f q',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
+      username: 'Matteus_varlesse',
+      content: messiPost,
+      subtitle:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
+      comments: [
+        {
+          id: '1',
+          username: 'Matteus Varlesse',
+          content: 'spfijasofpiajhfoi qnifasjhfpiqwj0fjqwpfjqp fjqwpif',
+        },
+      ],
+    },
+    {
+      imageProfile: profileImage,
+      id: 'asjfoajhfaijfqwijf qfjq-w9f q',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
+      username: 'Matteus_varlesse',
+      content: messiPost,
+      subtitle:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
+      comments: [
+        {
+          id: '1',
+          username: 'Matteus Varlesse',
+          content: 'spfijasofpiajhfoi qnifasjhfpiqwj0fjqwpfjqp fjqwpif',
+        },
+        {
+          id: '2',
+          username: 'Guilherme Varlesse',
+          content: 'spfijasofpiajhfoi qnifasjhfpiqwj0fjqwpfjqp fjqwpif',
+        },
+      ],
+    },
+    {
+      imageProfile: profileImage,
+      id: 'asjfoajhfaijfqwijf qfjq-w9f q',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
+      username: 'Matteus_varlesse',
+      content: messiPost,
+      subtitle:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
+      comments: [
+        {
+          id: '1',
+          username: 'Matteus Varlesse',
+          content: 'spfijasofpiajhfoi qnifasjhfpiqwj0fjqwpfjqp fjqwpif',
+        },
+        {
+          id: '2',
+          username: 'Guilherme Varlesse',
+          content: 'spfijasofpiajhfoi qnifasjhfpiqwj0fjqwpfjqp fjqwpif',
+        },
+      ],
+    },
+  ]
+
   return (
-    <div className="flex max-md:flex-col-reverse max-md:justify-between h-screen bg-black">
+    <div className="flex max-md:flex-col-reverse max-md:justify-between bg-black">
       <aside className="max-md:h-8 max-md:w-screen max-md:py-4 max-md:px-6 max-md:border-t flex  max-md:items-center border-stone-600">
         <nav className="flex md:flex-col gap-6 w-full justify-between">
           <Link href="/">
@@ -67,7 +151,11 @@ export default function Home() {
         </div>
         <Header />
 
-        <Post />
+        <div className="space-y-4">
+          {dataPost.map((post) => {
+            return <Post key={post.postId} dataPost={post} />
+          })}
+        </div>
       </main>
     </div>
   )
