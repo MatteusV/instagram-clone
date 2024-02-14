@@ -1,15 +1,19 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { X } from '@phosphor-icons/react'
+import { randomBytes } from 'crypto'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { api } from '@/lib/axios'
+import { storage } from '@/lib/firebase'
 
 const formPostSchema = z.object({
   subtitle: z.string().max(200),
@@ -27,17 +31,46 @@ export default function Style() {
     resolver: zodResolver(formPostSchema),
   })
   const [imageUrl, setImageUrl] = useState('')
-  const [image, setImage] = useState('')
+  const [image, setImage] = useState<File>()
 
-  const handleImageChange = (e: any) => {
-    setImageUrl(URL.createObjectURL(e.target.files[0]))
-    setImage(e.target.files[0])
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setImageUrl(URL.createObjectURL(e.target!.files![0]))
+    setImage(e.target!.files![0])
   }
 
   async function handleSubmitPost(formData: FormPostSchema) {
-    const data = { formData, image }
+    if (image) {
+      const ext = image.name.split('.')[1]
+      const newImageName = randomBytes(64).toString('hex')
+      const imageName = `${newImageName}.${ext}`
+      const storageRef = ref(storage, `content-post/${imageName}`)
+      const uploadTask = uploadBytesResumable(storageRef, image)
 
-    console.log(data)
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          console.log(`Upload is ${progress}% done`)
+
+          if (snapshot.state === 'paused') {
+            alert('Upload is paused')
+          }
+        },
+        (error) => {
+          if (error) {
+            alert(error)
+          }
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadUrl) => {
+            const data = { formData, imageUrl: downloadUrl }
+
+            await api.post('/post/create', data)
+          })
+        },
+      )
+    }
   }
 
   return (

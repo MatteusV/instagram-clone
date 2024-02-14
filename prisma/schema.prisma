@@ -58,12 +58,9 @@ model VerificationToken {
 }
 
 model Location {
-  id     String @id @default(uuid())
-  city   String
-  state  String
-  postId String
-
-  post Post @relation(fields: [postId], references: [id])
+  id    String @id @default(uuid())
+  city  String @unique
+  state String @unique
 
   @@map("locations")
 }
@@ -74,8 +71,7 @@ model Post {
   subtitle String?
   userId   String
 
-  user     User       @relation(fields: [userId], references: [id])
-  Location Location[]
+  user User @relation(fields: [userId], references: [id])
 
   @@map("posts")
 }

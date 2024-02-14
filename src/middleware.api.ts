@@ -1,4 +1,3 @@
-import multer from 'multer'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
