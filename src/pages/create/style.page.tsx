@@ -3,7 +3,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { X } from '@phosphor-icons/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useSession } from 'next-auth/react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -11,7 +10,6 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { api } from '@/lib/axios'
 
 const formPostSchema = z.object({
   subtitle: z.string().max(200),
@@ -28,20 +26,18 @@ export default function Style() {
   } = useForm<FormPostSchema>({
     resolver: zodResolver(formPostSchema),
   })
+  const [imageUrl, setImageUrl] = useState('')
   const [image, setImage] = useState('')
 
   const handleImageChange = (e: any) => {
-    setImage(URL.createObjectURL(e.target.files[0]))
+    setImageUrl(URL.createObjectURL(e.target.files[0]))
+    setImage(e.target.files[0])
   }
 
   async function handleSubmitPost(formData: FormPostSchema) {
     const data = { formData, image }
-    const res = await api.post('/post/create', data)
 
-    if (res.status === 201) {
-      alert('Post cadastrado')
-      window.location.href = '/'
-    }
+    console.log(data)
   }
 
   return (
@@ -69,7 +65,7 @@ export default function Style() {
         action=""
         className="flex flex-col justify-center  h-full -mt-24  px-4 space-y-8"
       >
-        {image ? (
+        {imageUrl ? (
           ''
         ) : (
           <h1 className="text-center mt-8 text-xl font-bold">
@@ -79,9 +75,9 @@ export default function Style() {
 
         <div className="space-y-1">
           <div className="">
-            {image ? (
+            {imageUrl ? (
               <Image
-                src={image}
+                src={imageUrl}
                 alt=""
                 width={0}
                 height={0}

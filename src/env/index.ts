@@ -6,7 +6,6 @@ const envSchema = z.object({
   NEXT_AUTH_SECRET: z.string(),
   NEXTAUTH_URL: z.string(),
   JWT_SECRET: z.string(),
-  PULSE_API_KEY: z.string(),
   NEXT_URL: z.string(),
 })
 
