@@ -128,14 +128,14 @@ const users = [
   },
 ]
 
-export function Header() {
+export function CarouselStory() {
   return (
-    <Carousel className="text-white max-md:h-24 max-md:bg-stone-900/60 flex items-center justify-between gap-4 max-md:p-2 max-sm:pl-3">
-      <CarouselContent>
+    <Carousel className="text-white max-md:h-24 max-md:bg-stone-900/60 md:w-[80%] max-md:p-2 max-sm:pl-3">
+      <CarouselContent className="flex items-center  w-max">
         {users.map((user) => (
           <CarouselItem
             key={user.id}
-            className="basis-1/4  flex flex-col justify-center items-center gap-1"
+            className="basis-1/7 mx-4  flex flex-col justify-center items-center gap-1"
           >
             <Link href="/">
               <Image

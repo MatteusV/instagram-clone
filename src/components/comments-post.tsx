@@ -10,7 +10,7 @@ export function CommentsPost({ comments }: CommentsPostProps) {
     return null
   }
   return (
-    <footer className="w-full space-y-3 max-h-20 overflow-scroll">
+    <footer className="w-full space-y-3 max-md:max-h-20 md:max-h-40 mt-4 md:h- overflow-y-scroll no-scrollbar">
       {comments.map((comment) => {
         return (
           <div key={comment.username}>

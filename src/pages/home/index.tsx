@@ -1,12 +1,4 @@
-import {
-  Compass,
-  FilmSlate,
-  Heart,
-  House,
-  MessengerLogo,
-  PlusCircle,
-  UserCircle,
-} from '@phosphor-icons/react'
+import { Heart, PlusCircle } from '@phosphor-icons/react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +9,8 @@ import Link from 'next/link'
 
 import profileImage from '@/assets/imageProfile.jpg'
 import messiPost from '@/assets/messiPost.jpg'
-import { Header } from '@/components/header'
+import { Aside } from '@/components/aside'
+import { CarouselStory } from '@/components/carouselStory'
 import { Post } from '@/components/post'
 
 import { satisfy } from '../login/index.page'
@@ -107,32 +100,14 @@ export default function Home() {
 
   return (
     <div className="flex max-md:flex-col-reverse max-md:justify-between bg-black">
-      <aside className="max-md:h-8 max-md:w-screen max-md:py-4 max-md:px-6 max-md:border-t flex  max-md:items-center border-stone-600">
-        <nav className="flex md:flex-col gap-6 w-full justify-between">
-          <Link href="/">
-            <House fill="#ffff" className="w-5 h-5" />
-          </Link>
-          <Link href="/">
-            <Compass fill="#ffff" className="w-5 h-5" />
-          </Link>
-          <Link href="/">
-            <FilmSlate fill="#ffff" className="w-5 h-5" />
-          </Link>
-          <Link href="/">
-            <MessengerLogo fill="#ffff" className="w-5 h-5" />
-          </Link>
-          <Link href="/">
-            <UserCircle fill="#ffff" className="w-5 h-5" />
-          </Link>
-        </nav>
-      </aside>
-      <main>
-        <div className="flex justify-between items-center text-white py-1 px-4">
-          <h1 className={`${satisfy.className} font-bold text-2xl`}>
+      <Aside />
+      <main className="md:px-80 h-screen overflow-y-scroll">
+        <div className="flex justify-between items-center text-white py-1 px-4 md:mt-8">
+          <h1 className={`${satisfy.className} font-bold text-2xl md:hidden`}>
             Instagram
           </h1>
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 md:hidden">
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <PlusCircle fill="#ffff" className="h-7 w-7" />
@@ -149,11 +124,11 @@ export default function Home() {
             <Heart fill="#ffff" className="h-7 w-7" />
           </div>
         </div>
-        <Header />
 
-        <div className="space-y-4">
+        <div className="space-y-14 md:flex md:flex-col md:items-center">
+          <CarouselStory />
           {dataPost.map((post) => {
-            return <Post key={post.postId} dataPost={post} />
+            return <Post key={post.id} dataPost={post} />
           })}
         </div>
       </main>

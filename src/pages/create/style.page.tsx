@@ -17,7 +17,10 @@ import { storage } from '@/lib/firebase'
 
 const formPostSchema = z.object({
   subtitle: z.string().max(200),
-  location: z.string().transform((value) => value.toLowerCase()),
+  location: z
+    .string()
+    .transform((value) => value.toLowerCase())
+    .nullable(),
 })
 
 type FormPostSchema = z.infer<typeof formPostSchema>

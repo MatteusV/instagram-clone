@@ -103,7 +103,7 @@ export default function Login() {
 
           <div className="flex mt-6 gap-1">
             <p>Não tem uma conta?</p>
-            <Link href="/" className="text-blue-500 font-bold">
+            <Link href="/register" className="text-blue-500 font-bold">
               Cadastre-se
             </Link>
           </div>

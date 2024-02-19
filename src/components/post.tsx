@@ -7,7 +7,6 @@ import {
   Share,
 } from '@phosphor-icons/react'
 import Image, { StaticImageData } from 'next/image'
-import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
 import { CommentsPost } from './comments-post'
@@ -42,7 +41,7 @@ export function Post({ dataPost }: PostProps) {
     }
   }, [dataPost.subtitle])
   return (
-    <div className="max-md:w-full  max-md:p-2 text-white">
+    <div className="max-md:w-full  max-md:p-2 text-white  md:w-[40%]">
       <div className="w-full flex items-center justify-between">
         <div className="flex gap-2 items-center">
           <Image
@@ -62,7 +61,7 @@ export function Post({ dataPost }: PostProps) {
         </button>
       </div>
 
-      <main className="w-full  mt-2">
+      <main className="w-full mt-2 md:border md:border-stone-800 md:flex md:justify-center rounded-md">
         <Image src={dataPost.content} alt="" className="max-sm:w-full" />
       </main>
 
@@ -90,7 +89,12 @@ export function Post({ dataPost }: PostProps) {
           {subtitle.length >= 100 ? (
             ''
           ) : (
-            <span onClick={handleShowMoreSubtitle}>...</span>
+            <span
+              onClick={handleShowMoreSubtitle}
+              className="text-stone-500 hover:cursor-pointer"
+            >
+              ... mais
+            </span>
           )}
         </p>
       </div>
