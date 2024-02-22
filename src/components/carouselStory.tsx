@@ -143,6 +143,8 @@ export function CarouselStory() {
                 data-story={user.story}
                 src={user.image}
                 alt=""
+                width={500}
+                height={500}
                 className="h-16 w-16 rounded-full border-2 data-[story=false]:border-none data-[story=true]:border-red-400"
               />
             </Link>

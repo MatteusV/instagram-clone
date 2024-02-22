@@ -137,7 +137,7 @@ export function DialogCreatePost() {
                       >
                         <Input
                           id="location"
-                          placeholder="Adicionar localização"
+                          placeholder="Sâo José dos Campos - SP"
                           className="border-none focus-visible:ring-0 "
                           form="createPost"
                           {...register('location')}

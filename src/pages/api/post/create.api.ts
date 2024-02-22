@@ -14,9 +14,6 @@ export default async function handler(
   const { formData, imageUrl } = req.body
   const { subtitle, location } = formData
 
-  const city = location.split('-')[0]
-  const state = location.split('-')[1]
-
   const cookies = parseCookies({ req })
   const sessionToken = cookies['next-auth.session-token']
 
@@ -26,7 +23,7 @@ export default async function handler(
 
   const session = await prisma.session.findFirst({
     where: {
-      sessionToken,
+      session_token: sessionToken,
     },
   })
 
@@ -34,25 +31,39 @@ export default async function handler(
     return res.redirect(301, '/login')
   }
 
-  const resultTransaction = await prisma.$transaction([
-    prisma.post.create({
+  if (location) {
+    const city = location.split('-')[0]
+    const state = location.split('-')[1]
+
+    const resultTransaction = await prisma.$transaction([
+      prisma.post.create({
+        data: {
+          content: imageUrl,
+          subtitle,
+          userId: session.user_id,
+        },
+      }),
+      prisma.location.create({
+        data: {
+          city,
+          state,
+        },
+      }),
+    ])
+
+    if (resultTransaction) {
+      return res.status(201).send({ message: 'Post created' })
+    } else {
+      return res.status(400).send({ message: 'Error when creating post' })
+    }
+  } else {
+    await prisma.post.create({
       data: {
         content: imageUrl,
         subtitle,
-        userId: session.userId,
+        userId: session.user_id,
       },
-    }),
-    prisma.location.create({
-      data: {
-        city,
-        state,
-      },
-    }),
-  ])
-
-  if (resultTransaction) {
+    })
     return res.status(201).send({ message: 'Post created' })
-  } else {
-    return res.status(400).send({ message: 'Error when creating post' })
   }
 }

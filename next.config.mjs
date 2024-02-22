@@ -9,6 +9,11 @@ const nextConfig = {
         hostname: 'platform-lookaside.fbsbx.com',
         pathname: '/platform/profilepic/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+        pathname: '/v0/b/instagram-clone-cd459.appspot.com/**',
+      },
     ],
   },
 }

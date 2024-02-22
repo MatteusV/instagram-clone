@@ -1,3 +1,4 @@
+'use client'
 import { Heart, PlusCircle } from '@phosphor-icons/react'
 import {
   DropdownMenu,
@@ -6,97 +7,75 @@ import {
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
-import profileImage from '@/assets/imageProfile.jpg'
-import messiPost from '@/assets/messiPost.jpg'
 import { Aside } from '@/components/aside'
 import { CarouselStory } from '@/components/carouselStory'
 import { Post } from '@/components/post'
+import { api } from '@/lib/axios'
 
 import { satisfy } from '../login/index.page'
 
+interface Posts {
+  content: string
+  id: string
+  userId: string
+  subtitle: string
+  user: {
+    name: string
+    avatar_url: string
+  }
+}
+
+interface Comments {
+  id: string
+  content: string
+  userId: string
+  postId: string
+  user: {
+    id: string
+    name: string
+    avatar_url: string
+  }
+}
+
 export default function Home() {
-  const dataPost = [
-    {
-      imageProfile: profileImage,
-      id: 'asjfoajhfaijfqwijf qfjq-w9f q',
-      text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
-      username: 'Matteus_varlesse',
-      content: messiPost,
-      subtitle:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
-      comments: [
-        {
-          id: '1',
-          username: 'Matteus Varlesse',
-          content: 'spfijasofpiajhfoi qnifasjhfpiqwj0fjqwpfjqp fjqwpif',
-        },
-        {
-          id: '1',
-          username: 'Matteus Varlesse',
-          content: 'spfijasofpiajhfoi qnifasjhfpiqwj0fjqwpfjqp fjqwpif',
-        },
-      ],
-    },
-    {
-      imageProfile: profileImage,
-      id: 'gfsouahogahojfahsf qfjq-w9f q',
-      text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
-      username: 'Matteus_varlesse',
-      content: messiPost,
-      subtitle:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
-      comments: [
-        {
-          id: '1',
-          username: 'Matteus Varlesse',
-          content: 'spfijasofpiajhfoi qnifasjhfpiqwj0fjqwpfjqp fjqwpif',
-        },
-      ],
-    },
-    {
-      imageProfile: profileImage,
-      id: 'asjfoajhfaijfqwijf qfjq-w9f q',
-      text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
-      username: 'Matteus_varlesse',
-      content: messiPost,
-      subtitle:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
-      comments: [
-        {
-          id: '1',
-          username: 'Matteus Varlesse',
-          content: 'spfijasofpiajhfoi qnifasjhfpiqwj0fjqwpfjqp fjqwpif',
-        },
-        {
-          id: '2',
-          username: 'Guilherme Varlesse',
-          content: 'spfijasofpiajhfoi qnifasjhfpiqwj0fjqwpfjqp fjqwpif',
-        },
-      ],
-    },
-    {
-      imageProfile: profileImage,
-      id: 'asjfoajhfaijfqwijf qfjq-w9f q',
-      text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
-      username: 'Matteus_varlesse',
-      content: messiPost,
-      subtitle:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque tempora, nemo minima quae quis ea veniam hic dolorum est autem excepturi similique? Consectetur repellendus ea mollitia totam autem eveniet!',
-      comments: [
-        {
-          id: '1',
-          username: 'Matteus Varlesse',
-          content: 'spfijasofpiajhfoi qnifasjhfpiqwj0fjqwpfjqp fjqwpif',
-        },
-        {
-          id: '2',
-          username: 'Guilherme Varlesse',
-          content: 'spfijasofpiajhfoi qnifasjhfpiqwj0fjqwpfjqp fjqwpif',
-        },
-      ],
-    },
-  ]
+  const [post, setPost] = useState<Posts[]>([])
+  const [comments, setComments] = useState<Comments[]>([])
+
+  useEffect(() => {
+    async function getDataPost() {
+      const response = await api.get('/fetch/posts')
+      setPost(response.data.posts)
+      setComments(response.data.comments)
+    }
+
+    getDataPost()
+  }, [setPost, setComments])
+
+  const dataPosts = post.map((post) => {
+    const comment = comments.map((comment) => {
+      if (post.id === comment.id) {
+        return comment
+      } else {
+        return null
+      }
+    })
+
+    const posts = {
+      id: post.id,
+      content: post.content,
+      subtitle: post.subtitle,
+      userId: post.userId,
+      user: {
+        name: post.user.name,
+        avatar_url: post.user.avatar_url,
+      },
+      comment,
+    }
+
+    return posts
+  })
 
   return (
     <div className="flex max-md:flex-col-reverse max-md:justify-between bg-black">
@@ -127,7 +106,7 @@ export default function Home() {
 
         <div className="space-y-14 md:flex md:flex-col md:items-center">
           <CarouselStory />
-          {dataPost.map((post) => {
+          {dataPosts.map((post) => {
             return <Post key={post.id} dataPost={post} />
           })}
         </div>

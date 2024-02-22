@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import FacebookProvider from 'next-auth/providers/facebook'
+import { env } from 'process'
 
-import { env } from '@/env'
+// import { env } from '@/env'
 import { PrismaAdapter } from '@/lib/nextauth/prisma-adapter'
 
 export function buildNextAuthOptions(): NextAuthOptions {
@@ -10,8 +11,8 @@ export function buildNextAuthOptions(): NextAuthOptions {
     adapter: PrismaAdapter(),
     providers: [
       FacebookProvider({
-        clientId: env.FACEBOOK_CLIENT_ID,
-        clientSecret: env.FACEBOOK_CLIENT_SECRET,
+        clientId: env.FACEBOOK_CLIENT_ID!,
+        clientSecret: env.FACEBOOK_CLIENT_SECRET!,
       }),
     ],
     secret: env.NEXT_AUTH_SECRET,
