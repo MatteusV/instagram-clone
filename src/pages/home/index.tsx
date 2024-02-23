@@ -104,7 +104,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="space-y-14 md:flex md:flex-col md:items-center">
+        <div className="space-y-14 md:flex md:flex-col md:items-center md:pb-10">
           <CarouselStory />
           {dataPosts.map((post) => {
             return <Post key={post.id} dataPost={post} />

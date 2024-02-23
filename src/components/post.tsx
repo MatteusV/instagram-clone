@@ -124,7 +124,7 @@ export function Post({ dataPost }: Posts) {
         <CommentsPost comments={comments} />
       ) : (
         <div className="max-sm:mt-4 max-sm:mb-4 max-sm:w-full">
-          <p>Sem comentários</p>
+          <p className="text-sm text-stone-500 max-sm:-mt-3">Sem comentários</p>
         </div>
       )}
     </div>

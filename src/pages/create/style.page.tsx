@@ -70,6 +70,7 @@ export default function Style() {
             const data = { formData, imageUrl: downloadUrl }
 
             await api.post('/post/create', data)
+            window.location.href = '/'
           })
         },
       )
@@ -78,8 +79,8 @@ export default function Style() {
 
   return (
     <div className="bg-black text-white w-screen h-screen">
-      <header className="flex justify-between items-center p-2 font-bold">
-        <Link href={'/'}>
+      <header className="flex justify-between items-center p-2 font-bold pb-10">
+        <Link href="/">
           <X fill="#ffff" size={32} />
         </Link>
         <h1>Nova publicação de foto</h1>
@@ -161,7 +162,6 @@ export default function Style() {
             autoComplete="off"
             placeholder="São josé dos campos - SP"
             {...register('location')}
-            required
           />
 
           <datalist id="locations">

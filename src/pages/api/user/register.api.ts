@@ -26,10 +26,13 @@ export default async function Handler(
     })
   }
 
+  const usernameDeafault = fullName.split(' ')[0]
+
   const user = await prisma.user.create({
     data: {
       name: fullName,
       email,
+      username: usernameDeafault,
     },
   })
 
