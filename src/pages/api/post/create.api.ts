@@ -35,23 +35,17 @@ export default async function handler(
     const city = location.split('-')[0]
     const state = location.split('-')[1]
 
-    const resultTransaction = await prisma.$transaction([
-      prisma.post.create({
-        data: {
-          content: imageUrl,
-          subtitle,
-          userId: session.user_id,
-        },
-      }),
-      prisma.location.create({
-        data: {
-          city,
-          state,
-        },
-      }),
-    ])
+    const postCreated = await prisma.post.create({
+      data: {
+        content: imageUrl,
+        subtitle,
+        userId: session.user_id,
+        city,
+        state,
+      },
+    })
 
-    if (resultTransaction) {
+    if (postCreated) {
       return res.status(201).send({ message: 'Post created' })
     } else {
       return res.status(400).send({ message: 'Error when creating post' })

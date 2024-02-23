@@ -68,22 +68,15 @@ model VerificationRequest {
   @@unique([identifier, token])
 }
 
-model Location {
-  id    String @id @default(uuid())
-  city  String @unique
-  state String @unique
-
-  @@map("locations")
-}
-
 model Post {
-  id       String  @id @default(uuid())
+  id       String    @id @default(uuid())
   content  String
   subtitle String?
   userId   String
-
-  user    User      @relation(fields: [userId], references: [id])
-  comment Comment[]
+  city     String?
+  state    String?
+  user     User      @relation(fields: [userId], references: [id])
+  comment  Comment[]
 
   @@map("posts")
 }
