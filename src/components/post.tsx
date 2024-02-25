@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react'
 
 import profileNotImage from '@/assets/profileNotImage.jpg'
 
+import { AddComments } from './addComments'
 import { CommentsPost } from './comments-post'
 
 interface Posts {
@@ -25,8 +26,14 @@ interface Posts {
     }
     comments?: {
       id: string
-      username: string
+      userId: string
       content: string
+      postId: string
+      user: {
+        id: string
+        name: string
+        avatar_url: string
+      }
     }[]
   }
 }
@@ -127,6 +134,8 @@ export function Post({ dataPost }: Posts) {
           <p className="text-sm text-stone-500 max-sm:-mt-3">Sem comentários</p>
         </div>
       )}
+
+      <AddComments postId={dataPost.id} />
     </div>
   )
 }

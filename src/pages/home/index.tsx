@@ -54,13 +54,8 @@ export default function Home() {
   }, [setPost, setComments])
 
   const dataPosts = post.map((post) => {
-    const comment = comments.map((comment) => {
-      if (post.id === comment.id) {
-        return comment
-      } else {
-        return null
-      }
-    })
+    const postComments =
+      comments?.filter((comment) => comment.postId === post.id) || []
 
     const posts = {
       id: post.id,
@@ -71,9 +66,8 @@ export default function Home() {
         name: post.user.name,
         avatar_url: post.user.avatar_url,
       },
-      comment,
+      comments: postComments,
     }
-
     return posts
   })
 

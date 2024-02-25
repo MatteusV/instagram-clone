@@ -16,7 +16,7 @@ import { DialogCreatePost } from './dialogCreatePost'
 export function Aside() {
   return (
     <>
-      <aside className="max-md:h-8 max-md:w-screen max-md:py-4 max-md:px-6 max-md:border-t flex  max-md:items-center border-stone-600 md:border-r md:pt-8 -mr-40 fixed">
+      <aside className="max-md:h-8 max-md:w-screen max-md:py-4 max-md:px-6 max-md:border-t flex  max-md:items-center border-stone-600 md:border-r md:pt-8 -mr-40 fixed bg-black">
         <nav className="flex gap-6 w-full flex-col h-screen justify-start items-start p-4 px-8 text-white max-sm:hidden">
           <h1
             className={`${satisfy.className} font-bold text-5xl max-md:hidden text-center text-white mb-8`}
