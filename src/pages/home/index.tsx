@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
 import { Aside } from '@/components/aside'
@@ -40,6 +41,7 @@ interface Comments {
 }
 
 export default function Home() {
+  const { data } = useSession()
   const [post, setPost] = useState<Posts[]>([])
   const [comments, setComments] = useState<Comments[]>([])
 
@@ -101,7 +103,7 @@ export default function Home() {
         <div className="space-y-14 md:flex md:flex-col md:items-center md:pb-10">
           <CarouselStory />
           {dataPosts.map((post) => {
-            return <Post key={post.id} dataPost={post} />
+            return <Post key={post.id} userId={data!.user.id} dataPost={post} />
           })}
         </div>
       </main>

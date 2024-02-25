@@ -8,9 +8,10 @@ import { Input } from './ui/input'
 
 interface AddCommentsProps {
   postId: string
+  userId: string
 }
 
-export function AddComments({ postId }: AddCommentsProps) {
+export function AddComments({ postId, userId }: AddCommentsProps) {
   const [showButtonComment, setShowButtonComment] = useState(false)
   const [commentText, setCommentText] = useState('')
   function handleShowButtonComment(e: ChangeEvent<HTMLInputElement>) {
@@ -24,9 +25,9 @@ export function AddComments({ postId }: AddCommentsProps) {
   }
 
   async function handleSubmitComment() {
-    const data = { content: commentText, postId }
+    const data = { content: commentText, postId, userId }
     await api.post('/comment/create', data)
-    window.location.reload()
+    window.location.href = '/'
   }
 
   return (

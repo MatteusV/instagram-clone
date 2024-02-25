@@ -1,5 +1,3 @@
-'use client'
-
 import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 
@@ -8,6 +6,7 @@ import { MoreUser } from '@/components/icons/moreUser'
 import { Settings } from '@/components/icons/settings'
 export default function ProfilePage() {
   const { data } = useSession()
+
   return (
     <div className="max-md:flex max-md:flex-col max-md:justify-between w-full h-[calc(100vh-2rem)] bg-black text-white">
       <div className="max-md:hidden">
