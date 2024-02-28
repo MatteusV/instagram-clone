@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { parseCookies } from 'nookies'
 
 import { prisma } from '@/lib/prisma'
 
@@ -10,29 +11,46 @@ export default async function handler(
     return res.status(405).end()
   }
 
-  const { content, postId, userId } = req.body
+  const { content, postId } = req.body
 
-  const postExists = await prisma.post.findUnique({
+  const cookies = parseCookies({ req })
+  const sessionToken = cookies['next-auth.session-token']
+
+  if (!sessionToken) {
+    return res.redirect(301, '/login')
+  }
+
+  const session = await prisma.session.findFirst({
     where: {
-      id: postId,
+      session_token: sessionToken,
     },
   })
 
-  if (!postExists) {
-    return res.status(404).json({ message: 'Post not found' })
+  if (session) {
+    const postExists = await prisma.post.findUnique({
+      where: {
+        id: postId,
+      },
+    })
+
+    if (!postExists) {
+      return res.status(404).json({ message: 'Post not found' })
+    }
+
+    const commentCreated = await prisma.comment.create({
+      data: {
+        content,
+        postId,
+        userId: session?.user_id,
+      },
+    })
+
+    if (!commentCreated.id) {
+      return res.status(400).json({ message: 'Unable to create comment' })
+    }
+
+    return res.status(201).send({ message: 'Comment created' })
   }
 
-  const commentCreated = await prisma.comment.create({
-    data: {
-      content,
-      postId,
-      userId,
-    },
-  })
-
-  if (!commentCreated.id) {
-    return res.status(400).json({ message: 'Unable to create comment' })
-  }
-
-  return res.status(201).send({ message: 'Comment created' })
+  return res.redirect(301, '/login')
 }

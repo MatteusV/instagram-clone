@@ -7,7 +7,6 @@ import {
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu'
 import Link from 'next/link'
-import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
 import { Aside } from '@/components/aside'
@@ -41,13 +40,12 @@ interface Comments {
 }
 
 export default function Home() {
-  const { data } = useSession()
   const [post, setPost] = useState<Posts[]>([])
   const [comments, setComments] = useState<Comments[]>([])
 
   useEffect(() => {
     async function getDataPost() {
-      const response = await api.get('/fetch/posts')
+      const response = await api.get('/post/fetch')
       setPost(response.data.posts)
       setComments(response.data.comments)
     }
@@ -74,7 +72,7 @@ export default function Home() {
   })
 
   return (
-    <div className="flex max-md:flex-col-reverse max-md:justify-between bg-black">
+    <div className="flex max-md:flex-col-reverse max-md:justify-between bg-black ">
       <Aside />
       <main className="md:px-80 h-screen overflow-y-scroll">
         <div className="flex justify-between items-center text-white py-1 px-4 md:mt-8">
@@ -100,10 +98,10 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="space-y-14 md:flex md:flex-col md:items-center md:pb-10">
+        <div className="space-y-14 md:flex md:flex-col md:items-center pb-10">
           <CarouselStory />
           {dataPosts.map((post) => {
-            return <Post key={post.id} userId={data!.user.id} dataPost={post} />
+            return <Post key={post.id} dataPost={post} />
           })}
         </div>
       </main>

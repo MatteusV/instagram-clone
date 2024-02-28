@@ -36,10 +36,9 @@ interface Posts {
       }
     }[]
   }
-  userId: string
 }
 
-export function Post({ dataPost, userId }: Posts) {
+export function Post({ dataPost }: Posts) {
   const [subtitle, setSubtitle] = useState('')
   const { comments } = dataPost
   function handleShowMoreSubtitle() {
@@ -136,7 +135,7 @@ export function Post({ dataPost, userId }: Posts) {
         </div>
       )}
 
-      <AddComments postId={dataPost.id} userId={userId} />
+      <AddComments postId={dataPost.id} />
     </div>
   )
 }

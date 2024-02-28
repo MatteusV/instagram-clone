@@ -8,12 +8,14 @@ import {
   UserCircle,
 } from '@phosphor-icons/react'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 
 import { satisfy } from '@/pages/login/index.page'
 
 import { DialogCreatePost } from './dialogCreatePost'
 
 export function Aside() {
+  const { data } = useSession()
   return (
     <>
       <aside className="max-md:h-8 max-md:w-screen max-md:py-4 max-md:px-6 max-md:border-t flex  max-md:items-center border-stone-600 md:border-r md:pt-8 -mr-40 fixed bg-black">
@@ -69,7 +71,7 @@ export function Aside() {
           <Link href="/">
             <MessengerLogo fill="#ffff" className="size-6" />
           </Link>
-          <Link href="/">
+          <Link href={`/profile/${data?.user.name}`}>
             <UserCircle fill="#ffff" className="size-6" />
           </Link>
         </nav>

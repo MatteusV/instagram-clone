@@ -13,6 +13,7 @@ export default async function handler(_: NextApiRequest, res: NextApiResponse) {
       },
     },
   })
+
   const [comments] = await Promise.all(
     posts.map(async (post) => {
       const comments = await prisma.comment.findMany({
