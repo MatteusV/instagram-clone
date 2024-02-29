@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react'
 
 import profileNotImage from '@/assets/profileNotImage.jpg'
 import { Aside } from '@/components/aside'
+import { GridMarked } from '@/components/gridMarked'
+import { GridPosts } from '@/components/gridPosts'
+import { GridFavorite } from '@/components/gridReels'
 import { Favorite } from '@/components/icons/favorite'
 import { Grid } from '@/components/icons/grid'
 import { Marked } from '@/components/icons/marked'
@@ -22,11 +25,29 @@ interface UserProps {
   avatar_url: string | null
   created_at: Date
 }
+
+interface PostsProps {
+  id: string
+  content: string
+  subtitle: string | null
+  userId: string
+  city: string | null
+  state: string | null
+  comment: {
+    id: string
+    content: string
+    userId: string
+    postId: string
+  }[]
+}
 export default function ProfilePage() {
   const { query } = useRouter()
-  const [user, setUser] = useState<UserProps>()
-  const [countPost, setCountPost] = useState(0)
-  const [activeGrid, setActiveGrid] = useState(false)
+  const [states, setStates] = useState({
+    user: undefined as UserProps | undefined,
+    posts: undefined as PostsProps[] | undefined,
+    countPost: 0,
+  })
+  const [activeGrid, setActiveGrid] = useState(true)
   const [activeFavorite, setActiveFavorite] = useState(false)
   const [activeMarked, setActiveMarked] = useState(false)
 
@@ -35,8 +56,11 @@ export default function ProfilePage() {
       if (query.username) {
         const response = await api.get(`/user/${query.username}`)
         if (response.status === 200) {
-          setUser(response.data.user)
-          setCountPost(response.data.countPosts)
+          setStates({
+            countPost: response.data.countPosts,
+            posts: response.data.posts,
+            user: response.data.user,
+          })
         } else if (response.status === 404) {
           alert(
             `Não foi possível achar o usuario com este username: ${query.username}`,
@@ -47,10 +71,10 @@ export default function ProfilePage() {
       }
     }
 
-    if (!user || countPost === 0) {
+    if (!states.user !== undefined || states.countPost === 0) {
       getDataUser()
     }
-  }, [user, countPost, query])
+  }, [query, states])
 
   const dataHighlightProfile = [
     {
@@ -60,16 +84,9 @@ export default function ProfilePage() {
     },
   ]
 
-  if (typeof window !== 'undefined') {
-    const container = document.getElementById('teste')
-    if (dataHighlightProfile.length <= 5) {
-      container?.setAttribute('data-scroll', 'true')
-    }
+  checkArraySizeAndActivateOverflowScroll(dataHighlightProfile)
 
-    if (dataHighlightProfile.length > 5) {
-      container?.setAttribute('data-scroll', 'false')
-    }
-  }
+  const { user, countPost, posts } = states
 
   if (user) {
     return (
@@ -147,6 +164,7 @@ export default function ProfilePage() {
               <p className="text-sm text-zinc-400">seguindo</p>
             </div>
           </div>
+
           <div className="max-md:w-full flex justify-around py-2">
             <button
               onClick={() => {
@@ -182,11 +200,33 @@ export default function ProfilePage() {
               <Marked active={activeMarked} />
             </button>
           </div>
+
+          {activeGrid === true ? <GridPosts posts={posts!} /> : null}
+          {activeFavorite === true ? <GridFavorite posts={posts!} /> : null}
+          {activeMarked === true ? <GridMarked posts={posts!} /> : null}
         </main>
         <div className="md:hidden">
           <Aside />
         </div>
       </div>
     )
+  }
+}
+
+function checkArraySizeAndActivateOverflowScroll(
+  dataHighlightProfile: {
+    content: string
+    title: string
+  }[],
+) {
+  if (typeof window !== 'undefined') {
+    const container = document.getElementById('teste')
+    if (dataHighlightProfile.length <= 5) {
+      container?.setAttribute('data-scroll', 'true')
+    }
+
+    if (dataHighlightProfile.length > 5) {
+      container?.setAttribute('data-scroll', 'false')
+    }
   }
 }

@@ -24,7 +24,16 @@ export default async function Handler(
           userId: user.id,
         },
       })
-      return res.status(200).send({ user, countPosts })
+
+      const posts = await prisma.post.findMany({
+        where: {
+          userId: user.id,
+        },
+        include: {
+          comment: true,
+        },
+      })
+      return res.status(200).send({ user, countPosts, posts })
     } else {
       return res.status(404).send({ message: 'User not found' })
     }
