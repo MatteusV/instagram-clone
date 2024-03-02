@@ -52,7 +52,10 @@ export function Aside() {
 
           <DialogCreatePost />
 
-          <Link href="/" className="flex gap-4 items-center justify-center">
+          <Link
+            href={`/profile/${data?.user.name}`}
+            className="flex gap-4 items-center justify-center"
+          >
             <UserCircle fill="#ffff" className="size-6" />
             <strong>Perfil</strong>
           </Link>

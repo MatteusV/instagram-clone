@@ -10,9 +10,11 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 import profileNotImage from '@/assets/profileNotImage.jpg'
+import { api } from '@/lib/axios'
 
 import { AddComments } from './addComments'
 import { CommentsPost } from './comments-post'
+import { Favorite } from './icons/favorite'
 
 interface Posts {
   dataPost: {
@@ -36,13 +38,43 @@ interface Posts {
       }
     }[]
   }
+
+  postThatTheUserFavorited: {
+    postId: string
+    userId: string
+    id: string
+  }[]
 }
 
-export function Post({ dataPost }: Posts) {
+export function Post({ dataPost, postThatTheUserFavorited }: Posts) {
   const [subtitle, setSubtitle] = useState('')
+  const [favorite, setFavorite] = useState(false)
   const { comments } = dataPost
   function handleShowMoreSubtitle() {
     setSubtitle(dataPost.subtitle)
+  }
+
+  const userId = '201e1d19-dc70-41db-9141-df1be85d998c'
+
+  useEffect(() => {
+    const isPostFavoritedByUser = postThatTheUserFavorited.some(
+      (post) => post.postId === dataPost.id && post.userId === userId,
+    )
+    setFavorite(isPostFavoritedByUser)
+  }, [dataPost.id, postThatTheUserFavorited])
+
+  function handleShowAndFocusOnInput() {
+    const inputComment = document.getElementById('inputComment')
+    const containerInput = document.getElementById('containerInput')
+    if (containerInput?.getAttribute('data-key') === dataPost.id) {
+      if (containerInput?.classList.contains('max-md:hidden')) {
+        containerInput?.classList.remove('max-md:hidden')
+      } else {
+        containerInput?.classList.add('max-md:hidden')
+      }
+    }
+
+    inputComment?.focus()
   }
 
   useEffect(() => {
@@ -53,7 +85,7 @@ export function Post({ dataPost }: Posts) {
     }
   }, [dataPost.subtitle])
   return (
-    <div className="max-md:w-full  max-md:p-2 text-white  md:w-[40%]">
+    <div className="max-md:w-full  max-md:p-2 text-white  md:w-[40%] max-md:pb-0">
       <div className="w-full flex items-center justify-between">
         <div className="flex gap-2 items-center">
           {dataPost.user.avatar_url ? (
@@ -98,16 +130,34 @@ export function Post({ dataPost }: Posts) {
           <button>
             <Heart fill="#ffff" size={28} />
           </button>
-          <button>
-            <ChatCircle fill="#ffff" size={28} />
+          <button onClick={handleShowAndFocusOnInput}>
+            <ChatCircle key={dataPost.id} fill="#ffff" size={28} />
           </button>
           <button>
             <Share fill="#ffff" size={28} />
           </button>
         </div>
 
-        <button>
-          <BookmarkSimple fill="#ffff" size={28} />
+        <button
+          onClick={async () => {
+            if (!favorite) {
+              setFavorite(true)
+              const { id, userId } = dataPost
+              const data = { id, userId }
+              await api.post('/post/add-favorite', data)
+            } else {
+              setFavorite(false)
+              const { id, userId } = dataPost
+              const data = { id, userId }
+              await api.post('/post/remove-favorite', data)
+            }
+          }}
+        >
+          {favorite ? (
+            <Favorite active={false} favoritePost />
+          ) : (
+            <BookmarkSimple fill="#ffff" size={28} />
+          )}
         </button>
       </div>
 
@@ -135,7 +185,7 @@ export function Post({ dataPost }: Posts) {
         </div>
       )}
 
-      <AddComments postId={dataPost.id} />
+      <AddComments key={dataPost.id} postId={dataPost.id} />
     </div>
   )
 }

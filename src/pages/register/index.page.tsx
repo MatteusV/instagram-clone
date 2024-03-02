@@ -20,7 +20,6 @@ const registerFormSchema = z.object({
     .string()
     .email()
     .transform((val) => val.toLowerCase()),
-  password: z.string().min(6),
   fullName: z.string(),
   username: z.string(),
 })
@@ -41,6 +40,8 @@ export default function Register() {
 
     if (status === 201) {
       window.location.href = '/'
+    } else {
+      alert('Tente denovo')
     }
   }
 
@@ -91,12 +92,6 @@ export default function Register() {
             className="rounded-none shadow-md placeholder:text-xs"
             placeholder="Nome de usuário"
             {...register('username')}
-          />
-          <Input
-            type="password"
-            className="rounded-none shadow-md placeholder:text-xs"
-            placeholder="Senha"
-            {...register('password')}
           />
         </form>
 

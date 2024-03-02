@@ -39,15 +39,23 @@ interface Comments {
   }
 }
 
+interface Favorite {
+  id: string
+  userId: string
+  postId: string
+}
+
 export default function Home() {
   const [post, setPost] = useState<Posts[]>([])
   const [comments, setComments] = useState<Comments[]>([])
+  const [favorites, setFavorites] = useState<Favorite[]>([])
 
   useEffect(() => {
     async function getDataPost() {
       const response = await api.get('/post/fetch')
       setPost(response.data.posts)
       setComments(response.data.comments)
+      setFavorites(response.data.favorites)
     }
 
     getDataPost()
@@ -74,8 +82,8 @@ export default function Home() {
   return (
     <div className="flex max-md:flex-col-reverse max-md:justify-between bg-black ">
       <Aside />
-      <main className="md:px-80 h-screen overflow-y-scroll">
-        <div className="flex justify-between items-center text-white py-1 px-4 md:mt-8">
+      <main className="md:px-80 h-screen overflow-y-scroll pb-20">
+        <div className="flex justify-between items-center text-white py-1 px-4 md:mt-8 ">
           <h1 className={`${satisfy.className} font-bold text-2xl md:hidden`}>
             Instagram
           </h1>
@@ -98,10 +106,16 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="space-y-14 md:flex md:flex-col md:items-center pb-10">
+        <div className="space-y-14 md:flex md:flex-col md:items-center">
           <CarouselStory />
           {dataPosts.map((post) => {
-            return <Post key={post.id} dataPost={post} />
+            return (
+              <Post
+                postThatTheUserFavorited={favorites}
+                key={post.id}
+                dataPost={post}
+              />
+            )
           })}
         </div>
       </main>

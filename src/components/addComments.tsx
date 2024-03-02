@@ -31,11 +31,16 @@ export function AddComments({ postId }: AddCommentsProps) {
   }
 
   return (
-    <div className="flex items-center mt-4 max-md:hidden">
+    <div
+      id="containerInput"
+      data-key={postId}
+      className="flex items-center mt-4 max-md:hidden"
+    >
       <Input
+        id="inputComment"
         onChange={handleShowButtonComment}
         placeholder="Adicione um comentario...."
-        className="border-none"
+        className="md:border-none max-md:border max-md:border-stone-100"
       />
       {showButtonComment ? (
         <Button

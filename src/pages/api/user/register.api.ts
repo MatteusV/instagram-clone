@@ -12,7 +12,7 @@ export default async function Handler(
     return res.status(405).end()
   }
 
-  const { email, fullName } = req.body
+  const { email, fullName, username } = req.body
 
   const userExists = await prisma.user.findUnique({
     where: {
@@ -26,13 +26,11 @@ export default async function Handler(
     })
   }
 
-  const usernameDeafault = fullName.split(' ')[0]
-
   const user = await prisma.user.create({
     data: {
       name: fullName,
       email,
-      username: usernameDeafault,
+      username,
     },
   })
 

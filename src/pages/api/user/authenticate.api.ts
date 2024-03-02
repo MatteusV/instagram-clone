@@ -12,23 +12,28 @@ export default async function Handler(
     return res.status(405).end()
   }
 
-  const { email, name } = req.body
-
+  const { email, fullName } = req.body
   const user = await prisma.user.findUnique({
     where: {
       email,
-      name,
     },
   })
 
   if (!user) {
+    await prisma.$disconnect()
     return res.status(401).send({ message: 'Email or password incorrect' })
-  } else {
+  }
+
+  if (user.name === fullName) {
     const token = generateToken(user.id)
     setCookie({ res }, '@instagram:token', token, {
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: '/',
     })
-    return res.status(200).send({ message: 'Authentication successful' })
+    await prisma.$disconnect()
+    return res.status(200).send(user.id)
   }
+
+  await prisma.$disconnect()
+  return res.status(401).send({ message: 'Email or full name incorrect' })
 }

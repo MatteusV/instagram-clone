@@ -11,7 +11,6 @@ import { Facebook } from '@/components/icons/facebook'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import { api } from '@/lib/axios'
 import { handleConnectWithFacebook } from '@/utils/handleConnectWithFacebook'
 
 export const satisfy = Satisfy({
@@ -20,8 +19,8 @@ export const satisfy = Satisfy({
 })
 
 const formLoginSchema = z.object({
-  username: z.string(),
-  password: z.string().min(6),
+  fullName: z.string(),
+  email: z.string().transform((val) => val.toLowerCase()),
 })
 
 type FormLoginSchema = z.infer<typeof formLoginSchema>
@@ -36,10 +35,13 @@ export default function Login() {
   })
 
   async function handleLoginUser(data: FormLoginSchema) {
-    const { status } = await api.post('/user/authenticate', data)
-    if (status === 200) {
-      window.location.href = '/home'
-    }
+    alert(
+      `Estamos trabalhando nessa funcionalidade ainda, por favor ${data.fullName.split(' ')[0]} faça login com o FACEBOOK. `,
+    )
+    // const { status } = await api.post('/user/authenticate', data)
+    // if (status === 200) {
+    //   window.location.href = '/home'
+    // }
   }
 
   return (
@@ -67,12 +69,12 @@ export default function Login() {
           onSubmit={handleSubmit(handleLoginUser)}
           className="space-y-4 w-full px-8"
         >
-          <Input type="text" placeholder="Nome" {...register('username')} />
           <Input
-            type="password"
-            placeholder="Senha"
-            {...register('password')}
+            type="text"
+            placeholder="Nome completo"
+            {...register('fullName')}
           />
+          <Input type="email" placeholder="email" {...register('email')} />
 
           <Button
             type="submit"
