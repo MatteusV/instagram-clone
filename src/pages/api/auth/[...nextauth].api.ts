@@ -49,6 +49,15 @@ export function buildNextAuthOptions(): NextAuthOptions {
     jwt: {
       secret: env.JWT_SECRET!,
     },
+    callbacks: {
+      session: async ({ session, token, user }) => {
+        console.log(token)
+        if (session?.user) {
+          session.user.id = user.id
+        }
+        return session
+      },
+    },
   }
 }
 

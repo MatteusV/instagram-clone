@@ -1,4 +1,3 @@
-'use client'
 import { Heart, PlusCircle } from '@phosphor-icons/react'
 import {
   DropdownMenu,

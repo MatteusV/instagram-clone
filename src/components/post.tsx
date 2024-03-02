@@ -7,6 +7,7 @@ import {
   Share,
 } from '@phosphor-icons/react'
 import Image from 'next/image'
+import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
 import profileNotImage from '@/assets/profileNotImage.jpg'
@@ -53,15 +54,16 @@ export function Post({ dataPost, postThatTheUserFavorited }: Posts) {
   function handleShowMoreSubtitle() {
     setSubtitle(dataPost.subtitle)
   }
+  const { data } = useSession()
 
-  const userId = '201e1d19-dc70-41db-9141-df1be85d998c'
+  const userId = data!.user.id
 
   useEffect(() => {
     const isPostFavoritedByUser = postThatTheUserFavorited.some(
       (post) => post.postId === dataPost.id && post.userId === userId,
     )
     setFavorite(isPostFavoritedByUser)
-  }, [dataPost.id, postThatTheUserFavorited])
+  }, [dataPost.id, postThatTheUserFavorited, userId])
 
   function handleShowAndFocusOnInput() {
     const inputComment = document.getElementById('inputComment')
