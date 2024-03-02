@@ -16,7 +16,7 @@ export function ProfileHighlight({
   if (newHighlight) {
     return (
       <div className="flex flex-col justify-center items-center gap-1">
-        <div className="size-14 border border-stone-600 rounded-full bg-stone-900 flex justify-center items-center">
+        <div className="size-14 lg:size-20 border border-stone-600 rounded-full bg-stone-900 flex justify-center items-center">
           <Plus className="size-8 text-stone-00" />
         </div>
         <p className="text-xs">Novo</p>
@@ -26,7 +26,7 @@ export function ProfileHighlight({
   if (data) {
     return (
       <div className="flex flex-col justify-center items-center gap-1">
-        <div className="size-14 border border-stone-600 rounded-full bg-stone-900 flex justify-center items-center">
+        <div className="size-14 lg:size-20 border border-stone-600 rounded-full bg-stone-900 flex justify-center items-center">
           <Image
             src={data.content}
             width={100}

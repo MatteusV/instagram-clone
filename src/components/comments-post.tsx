@@ -21,7 +21,7 @@ export function CommentsPost({ comments }: CommentsPostProps) {
     <footer className="w-full space-y-3 max-md:max-h-20 md:max-h-40 mt-4 md:h- overflow-y-scroll no-scrollbar">
       {comments.map((comment) => {
         return (
-          <div key={comment.content} className="flex gap-1">
+          <div key={comment.id} className="flex gap-1">
             <strong className="text-white font-medium">
               {comment.user.name}
             </strong>

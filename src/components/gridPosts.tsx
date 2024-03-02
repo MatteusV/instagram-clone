@@ -50,7 +50,7 @@ function ComponentPost({ post }: ComponentPostsProps) {
       onClick={() => {
         window.location.href = `post/${post.id}`
       }}
-      className="w-full"
+      className="lg:w-full 2xl:w-72"
     >
       <Image
         src={post.content}

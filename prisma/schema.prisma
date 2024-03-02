@@ -11,17 +11,18 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  username   String    @unique
+  id         String     @id @default(uuid())
+  username   String     @unique
   name       String
-  bio        String?   @db.Text
-  email      String?   @unique
+  bio        String?    @db.Text
+  email      String?    @unique
   avatar_url String?
-  created_at DateTime  @default(now())
+  created_at DateTime   @default(now())
   accounts   Account[]
   sessions   Session[]
   Post       Post[]
   Comment    Comment[]
+  Favorite   Favorite[]
 
   @@map("users")
 }
@@ -69,14 +70,16 @@ model VerificationRequest {
 }
 
 model Post {
-  id       String    @id @default(uuid())
+  id       String     @id @default(uuid())
   content  String
   subtitle String?
   userId   String
+  reels    Boolean    @default(false)
   city     String?
   state    String?
-  user     User      @relation(fields: [userId], references: [id])
+  user     User       @relation(fields: [userId], references: [id])
   comment  Comment[]
+  Favorite Favorite[]
 
   @@map("posts")
 }
@@ -90,4 +93,15 @@ model Comment {
   post    Post   @relation(fields: [postId], references: [id])
 
   @@map("comments")
+}
+
+model Favorite {
+  id     String @id @default(uuid())
+  postId String @unique
+  userId String
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+
+  @@map("favorites")
 }
