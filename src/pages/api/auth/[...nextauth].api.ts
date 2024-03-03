@@ -50,12 +50,11 @@ export function buildNextAuthOptions(): NextAuthOptions {
       secret: env.JWT_SECRET!,
     },
     callbacks: {
-      session: async ({ session, token, user }) => {
-        console.log(token)
-        if (session?.user) {
-          session.user.id = user.id
+      session: async ({ session, user }) => {
+        return {
+          ...session,
+          user,
         }
-        return session
       },
     },
   }

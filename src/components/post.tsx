@@ -16,6 +16,7 @@ import { api } from '@/lib/axios'
 import { AddComments } from './addComments'
 import { CommentsPost } from './comments-post'
 import { Favorite } from './icons/favorite'
+import { HeartFill } from './icons/heartFill'
 
 interface Posts {
   dataPost: {
@@ -45,11 +46,22 @@ interface Posts {
     userId: string
     id: string
   }[]
+
+  postThatTheUserLiked: {
+    postId: string
+    userId: string
+    id: string
+  }[]
 }
 
-export function Post({ dataPost, postThatTheUserFavorited }: Posts) {
+export function Post({
+  dataPost,
+  postThatTheUserFavorited,
+  postThatTheUserLiked,
+}: Posts) {
   const [subtitle, setSubtitle] = useState('')
   const [favorite, setFavorite] = useState(false)
+  const [liked, setLiked] = useState(false)
   const { comments } = dataPost
   function handleShowMoreSubtitle() {
     setSubtitle(dataPost.subtitle)
@@ -62,8 +74,12 @@ export function Post({ dataPost, postThatTheUserFavorited }: Posts) {
     const isPostFavoritedByUser = postThatTheUserFavorited.some(
       (post) => post.postId === dataPost.id && post.userId === userId,
     )
+    const isPostLikedByUser = postThatTheUserLiked.some(
+      (post) => post.postId === dataPost.id && post.userId === userId,
+    )
+    setLiked(isPostLikedByUser)
     setFavorite(isPostFavoritedByUser)
-  }, [dataPost.id, postThatTheUserFavorited, userId])
+  }, [dataPost.id, postThatTheUserFavorited, postThatTheUserLiked, userId])
 
   function handleShowAndFocusOnInput() {
     const inputComment = document.getElementById('inputComment')
@@ -129,8 +145,22 @@ export function Post({ dataPost, postThatTheUserFavorited }: Posts) {
 
       <div className="w-full mt-8 flex justify-between mb-4">
         <div className="flex gap-4">
-          <button>
-            <Heart fill="#ffff" size={28} />
+          <button
+            onClick={async () => {
+              if (!liked) {
+                setLiked(true)
+                const { id, userId } = dataPost
+                const data = { id, userId }
+                await api.post('/post/add-liked', data)
+              } else {
+                setLiked(false)
+                const { id, userId } = dataPost
+                const data = { id, userId }
+                await api.post('/post/remove-liked', data)
+              }
+            }}
+          >
+            {liked ? <HeartFill /> : <Heart fill="#ffff" size={28} />}
           </button>
           <button onClick={handleShowAndFocusOnInput}>
             <ChatCircle key={dataPost.id} fill="#ffff" size={28} />

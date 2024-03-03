@@ -35,5 +35,7 @@ export default async function handler(_: NextApiRequest, res: NextApiResponse) {
   )
 
   const favorites = await prisma.favorite.findMany()
-  return res.status(200).send({ posts, comments, favorites })
+
+  const likes = await prisma.like.findMany()
+  return res.status(200).send({ posts, comments, favorites, likes })
 }

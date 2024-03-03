@@ -23,6 +23,7 @@ model User {
   Post       Post[]
   Comment    Comment[]
   Favorite   Favorite[]
+  Like       Like[]
 
   @@map("users")
 }
@@ -80,6 +81,7 @@ model Post {
   user     User       @relation(fields: [userId], references: [id])
   comment  Comment[]
   Favorite Favorite[]
+  Like     Like?
 
   @@map("posts")
 }
@@ -104,4 +106,15 @@ model Favorite {
   post Post @relation(fields: [postId], references: [id])
 
   @@map("favorites")
+}
+
+model Like {
+  id     String @id @default(uuid())
+  postId String @unique
+  userId String
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+
+  @@map("likes")
 }

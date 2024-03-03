@@ -44,10 +44,17 @@ interface Favorite {
   postId: string
 }
 
+interface Liked {
+  id: string
+  userId: string
+  postId: string
+}
+
 export default function Home() {
   const [post, setPost] = useState<Posts[]>([])
   const [comments, setComments] = useState<Comments[]>([])
   const [favorites, setFavorites] = useState<Favorite[]>([])
+  const [liked, setLiked] = useState<Liked[]>([])
 
   useEffect(() => {
     async function getDataPost() {
@@ -55,10 +62,11 @@ export default function Home() {
       setPost(response.data.posts)
       setComments(response.data.comments)
       setFavorites(response.data.favorites)
+      setLiked(response.data.likes)
     }
 
     getDataPost()
-  }, [setPost, setComments])
+  }, [])
 
   const dataPosts = post.map((post) => {
     const postComments =
@@ -110,6 +118,7 @@ export default function Home() {
           {dataPosts.map((post) => {
             return (
               <Post
+                postThatTheUserLiked={liked}
                 postThatTheUserFavorited={favorites}
                 key={post.id}
                 dataPost={post}
