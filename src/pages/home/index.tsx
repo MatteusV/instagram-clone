@@ -67,7 +67,6 @@ export default function Home() {
 
     getDataPost()
   }, [])
-
   const dataPosts = post.map((post) => {
     const postComments =
       comments?.filter((comment) => comment.postId === post.id) || []

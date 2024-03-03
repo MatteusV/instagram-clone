@@ -8,9 +8,10 @@ import { Input } from './ui/input'
 
 interface AddCommentsProps {
   postId: string
+  showContainerInput: boolean
 }
 
-export function AddComments({ postId }: AddCommentsProps) {
+export function AddComments({ postId, showContainerInput }: AddCommentsProps) {
   const [showButtonComment, setShowButtonComment] = useState(false)
   const [commentText, setCommentText] = useState('')
 
@@ -33,8 +34,8 @@ export function AddComments({ postId }: AddCommentsProps) {
   return (
     <div
       id="containerInput"
-      data-key={postId}
-      className="flex items-center mt-4 max-md:hidden"
+      data-showContainer={showContainerInput}
+      className="flex items-center mt-4 data-[showContainer=false]:max-md:hidden data-[showContainer=true]:max-md:w-full"
     >
       <Input
         id="inputComment"

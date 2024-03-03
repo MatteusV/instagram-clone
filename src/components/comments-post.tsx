@@ -22,8 +22,8 @@ export function CommentsPost({ comments }: CommentsPostProps) {
       {comments.map((comment) => {
         return (
           <div key={comment.id} className="flex gap-1">
-            <strong className="text-white font-medium">
-              {comment.user.name}
+            <strong className="text-white font-bold">
+              {comment.user.name}:
             </strong>
             <p className="text-slate-200 ">{comment.content}</p>
           </div>

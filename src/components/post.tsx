@@ -62,13 +62,14 @@ export function Post({
   const [subtitle, setSubtitle] = useState('')
   const [favorite, setFavorite] = useState(false)
   const [liked, setLiked] = useState(false)
+  const [showContainerInput, setShowContainerInput] = useState(false)
   const { comments } = dataPost
   function handleShowMoreSubtitle() {
     setSubtitle(dataPost.subtitle)
   }
   const { data } = useSession()
 
-  const userId = data!.user.id
+  const userId = data?.user.id
 
   useEffect(() => {
     const isPostFavoritedByUser = postThatTheUserFavorited.some(
@@ -81,20 +82,6 @@ export function Post({
     setFavorite(isPostFavoritedByUser)
   }, [dataPost.id, postThatTheUserFavorited, postThatTheUserLiked, userId])
 
-  function handleShowAndFocusOnInput() {
-    const inputComment = document.getElementById('inputComment')
-    const containerInput = document.getElementById('containerInput')
-    if (containerInput?.getAttribute('data-key') === dataPost.id) {
-      if (containerInput?.classList.contains('max-md:hidden')) {
-        containerInput?.classList.remove('max-md:hidden')
-      } else {
-        containerInput?.classList.add('max-md:hidden')
-      }
-    }
-
-    inputComment?.focus()
-  }
-
   useEffect(() => {
     if (dataPost.subtitle.length >= 100) {
       setSubtitle(dataPost.subtitle.substring(0, 99))
@@ -102,6 +89,7 @@ export function Post({
       setSubtitle(dataPost.subtitle)
     }
   }, [dataPost.subtitle])
+
   return (
     <div className="max-md:w-full  max-md:p-2 text-white  md:w-[40%] max-md:pb-0">
       <div className="w-full flex items-center justify-between">
@@ -162,7 +150,11 @@ export function Post({
           >
             {liked ? <HeartFill /> : <Heart fill="#ffff" size={28} />}
           </button>
-          <button onClick={handleShowAndFocusOnInput}>
+          <button
+            onClick={() => {
+              setShowContainerInput((state) => !state)
+            }}
+          >
             <ChatCircle key={dataPost.id} fill="#ffff" size={28} />
           </button>
           <button>
@@ -217,7 +209,11 @@ export function Post({
         </div>
       )}
 
-      <AddComments key={dataPost.id} postId={dataPost.id} />
+      <AddComments
+        showContainerInput={showContainerInput}
+        key={dataPost.id}
+        postId={dataPost.id}
+      />
     </div>
   )
 }
