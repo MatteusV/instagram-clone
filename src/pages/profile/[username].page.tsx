@@ -265,7 +265,14 @@ function ProfileInformationMobile({
         <div>
           <p>{user.username}</p>
           <div className="flex gap-4">
-            <Button className="bg-stone-700">Editar perfil</Button>
+            <Button
+              onClick={() => {
+                window.location.href = '/accounts/edit'
+              }}
+              className="bg-stone-700"
+            >
+              Editar perfil
+            </Button>
             <Button className="bg-stone-700">Itens arquivados</Button>
           </div>
         </div>
@@ -273,7 +280,9 @@ function ProfileInformationMobile({
 
       <div className="max-md:w-full max-md:mt-8 ">
         <p className="font-semibold">{user.username}</p>
-        {user.bio ? <p className="font-semibold">{user.bio}</p> : null}
+        {user.bio ? (
+          <pre className="font-medium font-sans">{user.bio}</pre>
+        ) : null}
 
         <div
           id="containerOverflowScrollMobile"
@@ -323,7 +332,14 @@ function ProfileInformationDesktop({
           <div className="flex justify-center items-center gap-4 max-lg:flex-col">
             <p className="min-w-max">{user.username}</p>
             <div className="flex gap-4">
-              <Button className="bg-stone-800 font-bold">Editar perfil</Button>
+              <Button
+                onClick={() => {
+                  window.location.href = '/accounts/edit'
+                }}
+                className="bg-stone-800 font-bold"
+              >
+                Editar perfil
+              </Button>
               <Button className="bg-stone-800 font-bold">
                 Itens arquivados
               </Button>
@@ -349,7 +365,7 @@ function ProfileInformationDesktop({
 
           <div className="max-w-[50%] mt-4">
             <p className="text-sm font-semibold">{user.username}</p>
-            {user.bio ? <p className="font-semibold">{user.bio}</p> : null}
+            {user.bio ? <pre className="font-semibold">{user.bio}</pre> : null}
           </div>
         </div>
       </div>

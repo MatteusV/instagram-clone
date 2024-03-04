@@ -33,9 +33,8 @@ export function AddComments({ postId, showContainerInput }: AddCommentsProps) {
 
   return (
     <div
-      id="containerInput"
-      data-showContainer={showContainerInput}
-      className="flex items-center mt-4 data-[showContainer=false]:max-md:hidden data-[showContainer=true]:max-md:w-full"
+      data-showcontainer={showContainerInput}
+      className="flex items-center mt-4 data-[showcontainer=false]:max-md:hidden data-[showcontainer=true]:max-md:w-full"
     >
       <Input
         id="inputComment"
