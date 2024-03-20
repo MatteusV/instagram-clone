@@ -83,7 +83,7 @@ model Post {
   user     User       @relation(fields: [userId], references: [id])
   comment  Comment[]
   Favorite Favorite[]
-  Like     Like?
+  Like     Like[]
 
   @@map("posts")
 }
@@ -112,8 +112,8 @@ model Favorite {
 
 model Like {
   id     String @id @default(uuid())
-  postId String @unique
   userId String
+  postId String
 
   user User @relation(fields: [userId], references: [id])
   post Post @relation(fields: [postId], references: [id])
